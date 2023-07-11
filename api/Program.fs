@@ -30,9 +30,9 @@ let hello (message: string) =
 
 let apiEndpoints: ApiEndpoints = { hello = hello }
 
-let logsApiRPC = createApiEndpointsHandler apiEndpoints
+let apiRPC = createApiEndpointsHandler apiEndpoints
 
-let webApp = choose [ logsApiRPC; RequestErrors.notFound (text "404 - Not Found") ]
+let webApp = choose [ apiRPC; RequestErrors.notFound (text "404 - Not Found") ]
 
 type internal LifetimeEventsHostedServices(appLifetime: IHostApplicationLifetime) =
     let _appLifetime = appLifetime
