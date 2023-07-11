@@ -42,16 +42,10 @@ type internal LifetimeEventsHostedServices(appLifetime: IHostApplicationLifetime
         callHello "Hello World" |> ignore
         ()
 
-    let onStopping () = printfn "App Stopping"
-
-    let onStopped () = ()
-
     interface IHostedService with
 
         member this.StartAsync(cancellationtoken: CancellationToken) =
             _appLifetime.ApplicationStarted.Register(Action onStarted) |> ignore
-            _appLifetime.ApplicationStopping.Register(Action onStopping) |> ignore
-            _appLifetime.ApplicationStopped.Register(Action onStopped) |> ignore
             Task.CompletedTask
 
         member this.StopAsync(cancellationtoken: CancellationToken) = Task.CompletedTask
