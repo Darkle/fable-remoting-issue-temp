@@ -16,12 +16,6 @@ open CallHello
 let apiRPCRouteBuilder (typeName: string) (methodName: string) =
     sprintf "/api/%s/%s" typeName methodName
 
-let createApiEndpointsHandler endpoints =
-    Remoting.createApi ()
-    |> Remoting.withRouteBuilder apiRPCRouteBuilder
-    |> Remoting.fromValue endpoints
-    |> Remoting.buildHttpHandler
-
 let hello (message: string) =
     task {
         printfn "got to hello"
@@ -30,7 +24,11 @@ let hello (message: string) =
 
 let apiEndpoints: ApiEndpoints = { hello = hello }
 
-let apiRPC = createApiEndpointsHandler apiEndpoints
+let apiRPC =
+    Remoting.createApi ()
+    |> Remoting.withRouteBuilder apiRPCRouteBuilder
+    |> Remoting.fromValue apiEndpoints
+    |> Remoting.buildHttpHandler
 
 let webApp = choose [ apiRPC; RequestErrors.notFound (text "404 - Not Found") ]
 
