@@ -35,11 +35,14 @@ let logsApiRPC = createApiEndpointsHandler apiEndpoints
 let webApp = choose [ logsApiRPC; RequestErrors.notFound (text "404 - Not Found") ]
 
 type internal LifetimeEventsHostedServices(appLifetime: IHostApplicationLifetime) =
-
     let _appLifetime = appLifetime
 
     let onStarted () =
-        callHello "Hello World" |> ignore
+        try
+            callHello "Hello World" |> ignore
+        with e ->
+            printfn "Error: %A" e
+
         ()
 
     interface IHostedService with
